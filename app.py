@@ -123,7 +123,7 @@ def dashboard():
     rows=c.execute(sql,params).fetchall()
     cats=[r["category"] for r in c.execute("SELECT category FROM products GROUP BY category ORDER BY MIN (id)").fetchall()]
     total=sum(r["qty"] for r in c.execute("SELECT qty FROM stock WHERE branch=?",(branch,)).fetchall())
-    low=c.execute("SELECT COUNT(*) FROM stock WHERE branch=? AND qty BETWEEN 1 AND 4",(branch,)).fetchone()[0]
+    low=c.execute("SELECT COUNT(*) AS count FROM stock WHERE branch=? AND qty BETWEEN 1 AND 4",(branch,)).fetchone()["count"]
     out=c.execute("SELECT COUNT(*) FROM stock WHERE branch=? AND qty=0",(branch,)).fetchone()[0]
     c.close()
     return render_template("dashboard.html",rows=rows,branches=BRANCHES,branch=branch,cats=cats,category=cat,q=q,total=total,low=low,out=out)
