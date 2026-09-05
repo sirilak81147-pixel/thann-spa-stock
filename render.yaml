@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: thann-spa-stock
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: THANN_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: thann-spa-stock-db
+          property: connectionString
+databases:
+  - name: thann-spa-stock-db
+    plan: free

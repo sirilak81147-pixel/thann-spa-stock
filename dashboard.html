@@ -1,0 +1,11 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>THANN Stock</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<header class="top"><div><div class="brand">THANN SPA STOCK PRO</div><div style="font-size:12px;opacity:.8">ระบบจัดการสต๊อก 4 สาขา</div></div><div class="user">{{session.user}} · <a class="logout" href="/logout">ออกจากระบบ</a></div></header>
+<main class="wrap"><nav class="nav"><a class="active" href="/">จัดการสต๊อก</a><a href="/report">รายงานสรุป</a><a href="/history">ประวัติ</a></nav>
+{% with messages=get_flashed_messages() %}{% for m in messages %}<div class="msg">{{m}}</div>{% endfor %}{% endwith %}
+<div class="tabs">{% for b in branches %}<a class="{{'active' if b==branch}}" href="/?branch={{b|urlencode}}">{{b}}</a>{% endfor %}</div>
+<div class="cards"><div class="card"><span class="muted">รายการสินค้า</span><b class="big">{{rows|length}}</b></div><div class="card"><span class="muted">คงเหลือรวม</span><b class="big">{{total}}</b></div><div class="card"><span class="muted">ใกล้หมด / หมด</span><b class="big">{{low}} / {{out}}</b></div></div>
+<form class="toolbar"><input name="q" value="{{q}}" placeholder="ค้นหาชื่อหรือรหัสสินค้า"><select name="category" onchange="this.form.submit()"><option value="all">ทุกหมวดหมู่</option>{% for c in cats %}<option value="{{c}}" {{'selected' if c==category}}>{{c}}</option>{% endfor %}</select><input type="hidden" name="branch" value="{{branch}}"></form>
+{% set ns = namespace(cat='') %}{% for p in rows %}{% if ns.cat != p.category %}{% set ns.cat=p.category %}<h2 style="color:#274c3f;font-size:18px;margin:23px 0 8px">{{p.category}}</h2>{% endif %}
+<div class="item"><div><div class="code">{{p.code}}</div><div class="name">{{p.name}}</div></div><div class="stock {{'out' if p.qty==0 else 'low' if p.qty<5 else 'ok'}}">{{p.qty}}</div>
+<form class="actions" method="post" action="/movement"><input type="hidden" name="code" value="{{p.code}}"><input type="hidden" name="branch" value="{{branch}}"><input name="qty" type="number" min="1" value="1" required><button class="receive" name="action" value="receive">+ รับเข้า</button><button class="issue" name="action" value="issue">− เบิก</button></form></div>
+{% else %}<div class="panel">ไม่พบสินค้า</div>{% endfor %}</main></body></html>
