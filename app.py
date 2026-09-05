@@ -86,7 +86,7 @@ def init_db():
     staff_count=c.execute("SELECT COUNT(*) AS count FROM users WHERE role='staff'").fetchone()["count"]
     if staff_count==0:
         c.execute("INSERT INTO users(username,password,role,employee_name,employee_id) VALUES(?,?,?,?,?)",("staff","staff1234","staff","พนักงานตัวอย่าง","STAFF001"))
-    if c.execute("SELECT COUNT(*) FROM products").fetchone()[0]==0:
+    if c.execute("SELECT COUNT(*) AS count FROM products").fetchone()["count"] == 0:
         for category,code,name in PRODUCTS:
             c.execute("INSERT INTO products(category,code,name) VALUES(?,?,?)",(category,code,name))
         for p in c.execute("SELECT id FROM products").fetchall():
