@@ -134,7 +134,7 @@ def movement():
     code=request.form.get("code"); branch=request.form.get("branch"); action=request.form.get("action")
     try: qty=int(request.form.get("qty","0"))
     except: qty=0
-    if branch not in BRANCHES or action not in ("receive","issue") or qty<=0:
+    if branch not in BRANCHES or action not in ("receive","issue") or qty<=0 or (action=="receive" and session.get("role")!="admin"):
         flash("ข้อมูลรายการไม่ถูกต้อง"); return redirect(url_for("dashboard",branch=branch))
     c=db(); p=c.execute("SELECT * FROM products WHERE code=?",(code,)).fetchone()
     if not p: c.close(); flash("ไม่พบสินค้า"); return redirect(url_for("dashboard",branch=branch))
