@@ -121,7 +121,7 @@ def dashboard():
     if q: sql+=" AND (LOWER(p.code) LIKE ? OR LOWER(p.name) LIKE ?)"; params += [f"%{q.lower()}%",f"%{q.lower()}%"]
     if cat!="all": sql+=" AND p.category=?"; params.append(cat)
     rows=c.execute(sql,params).fetchall()
-    cats=[r[0] for r in c.execute("SELECT DISTINCT category FROM products ORDER BY id").fetchall()]
+    cats=[r["category"] for r in c.execute("SELECT category FROM products GROUP BY category ORDER BY MIN (id)").fetchall()]
     total=sum(r["qty"] for r in c.execute("SELECT qty FROM stock WHERE branch=?",(branch,)).fetchall())
     low=c.execute("SELECT COUNT(*) FROM stock WHERE branch=? AND qty BETWEEN 1 AND 4",(branch,)).fetchone()[0]
     out=c.execute("SELECT COUNT(*) FROM stock WHERE branch=? AND qty=0",(branch,)).fetchone()[0]
