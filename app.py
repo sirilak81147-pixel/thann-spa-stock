@@ -186,7 +186,7 @@ def export(kind):
         ws.title="Stock Summary"; ws.append(["หมวดหมู่","รหัสสินค้า","รายการ"]+BRANCHES+["รวม"])
         rows=c.execute("SELECT id,category,code,name FROM products ORDER BY id").fetchall()
         for p in rows:
-            nums=[c.execute("SELECT qty FROM stock WHERE product_id=? AND branch=?",(p["id"],b)).fetchone()[0] for b in BRANCHES]
+            nums=[c.execute("SELECT qty FROM stock WHERE product_id=? AND branch=?",(p["id"],b)).fetchone()["qty"] for b in BRANCHES]
             ws.append([p["category"],p["code"],p["name"]]+nums+[sum(nums)])
         filename="THANN_Stock_Summary.xlsx"
     else:
