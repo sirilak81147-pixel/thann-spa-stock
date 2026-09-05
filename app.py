@@ -72,12 +72,12 @@ def init_db():
         CREATE TABLE IF NOT EXISTS movements(id INTEGER PRIMARY KEY, created_at TEXT NOT NULL, username TEXT NOT NULL, branch TEXT NOT NULL, product_id INTEGER NOT NULL, action TEXT NOT NULL, qty INTEGER NOT NULL, before_qty INTEGER NOT NULL, after_qty INTEGER NOT NULL);
         """)
         if c.execute("SELECT COUNT(*) AS count FROM users").fetchone()["count"] == 0:
-        c.execute("INSERT INTO users(username,password,role) VALUES(?,?,?)",("admin","thann1234","admin"))
-        c.execute("INSERT INTO users(username,password,role) VALUES(?,?,?)",("staff","staff1234","staff"))
+            c.execute("INSERT INTO users(username,password,role) VALUES(?,?,?)",("admin","thann1234","admin"))
+            c.execute("INSERT INTO users(username,password,role) VALUES(?,?,?)",("staff","staff1234","staff"))
    if c.execute("SELECT COUNT(*) AS count FROM products").fetchone()["count"] == 0:
         for category,code,name in PRODUCTS:
             c.execute("INSERT INTO products(category,code,name) VALUES(?,?,?)",(category,code,name))
-            for p in c.execute("SELECT id FROM products").fetchall():
+        for p in c.execute("SELECT id FROM products").fetchall():
                  for b in BRANCHES:
                 c.execute("INSERT INTO stock(product_id,branch,qty) VALUES(?,?,0)", (p["id"], b))
     c.commit(); c.close()
